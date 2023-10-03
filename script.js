@@ -130,6 +130,8 @@ function abrirModal(mesa) {
     mesaSeleccionada = mesa;
     const modal = document.getElementById("modal");
     modal.style.display = "block";
+    document.getElementById("nombreMesa").value = ""
+    document.getElementById("descripcionMesa").value = ""
     document.getElementById("nombreMesa").value = mesaSeleccionada.querySelector('.nombre-mesa').textContent;
     document.getElementById("descripcionMesa").value = mesaSeleccionada.querySelector('.descripcion-mesa').textContent;
 }
