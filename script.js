@@ -5,13 +5,17 @@ const eliminaLS = document.getElementById('eliminaLocalStorage');
 
 //borra todos los elementos que no sean mesas y muestra botones para guardar mesas
 function actualizaContenido(nombreAula){
-    const guardarBoton = document.getElementById("guardarBoton");
+    const guardarHtml = document.getElementById("guardarHtml");
+    const guardarALS = document.getElementById("guardarALS");
+    const guardarAFichero = document.getElementById("guardarAFichero");
     const creaMesas = document.getElementById("creaMesas");
     const creaLS = document.getElementById("creaLocalStorage");
     const titulo = document.getElementById("titulo");
 
     titulo.textContent = nombreAula 
-    guardarBoton.classList.remove("invisible")
+    guardarHtml.classList.remove("invisible");
+    guardarALS.classList.remove("invisible");
+    guardarAFichero.classList.remove("invisible");
     mesasContainer.innerHTML = "";
     creaMesas.remove();
     creaLS.remove();
@@ -97,6 +101,7 @@ function guardarArchivoJson(nombre) {
 //convierte un json a contenido html
 function mesasAHTML(mesas){
     jsonObj = JSON.parse(mesas)
+    console.log(mesas)
     const mesasContainer = document.getElementById("mesas-container");
     mesasContainer.innerHTML = "";
     jsonObj.forEach(function(filaDeMesas) {
@@ -106,7 +111,6 @@ function mesasAHTML(mesas){
     filaDeMesas.forEach(function(mesa) {
         const mesaDiv = document.createElement("div");
         mesaDiv.classList.add("mesa");
-        mesaDiv.addEventListener("click", () => abrirModal(mesa));
         var nombreMesaDiv = document.createElement("div");
         nombreMesaDiv.classList.add("nombre-mesa");
         nombreMesaDiv.textContent = mesa.nombre;
@@ -119,21 +123,29 @@ function mesasAHTML(mesas){
         mesaDiv.appendChild(descripcionMesaDiv);
 
         filaDiv.appendChild(mesaDiv);
+        mesaDiv.addEventListener("click", () => abrirModal(mesaDiv));
+
     });
 
     mesasContainer.appendChild(filaDiv);
+    console.log(mesasContainer)
     });
 }
 
 
 function abrirModal(mesa) {
     mesaSeleccionada = mesa;
+    console.log(mesa)
     const modal = document.getElementById("modal");
     modal.style.display = "block";
     document.getElementById("nombreMesa").value = ""
     document.getElementById("descripcionMesa").value = ""
-    document.getElementById("nombreMesa").value = mesaSeleccionada.querySelector('.nombre-mesa').textContent;
-    document.getElementById("descripcionMesa").value = mesaSeleccionada.querySelector('.descripcion-mesa').textContent;
+    if (mesaSeleccionada.querySelector('.nombre-mesa')){
+        document.getElementById("nombreMesa").value = mesaSeleccionada.querySelector('.nombre-mesa').textContent;
+    }
+    if (mesaSeleccionada.querySelector('.descripcion-mesa')    ){
+        document.getElementById("descripcionMesa").value = mesaSeleccionada.querySelector('.descripcion-mesa').textContent;
+    }
 }
 
 function cerrarModal() {
@@ -170,12 +182,13 @@ function guardaHTML(){
 function cargarElementosLocalStorage() {
     const selectElement = document.getElementById('elementosLocalStorage');
     if (selectElement){
-        if (localStorage.length > 0 ) {
+        if (elementosImportantesLS()) {
             selectElement.innerHTML = '';
         } 
 
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
+            if (key.startsWith('_ym')) continue
             const optionElement = document.createElement('option');
             optionElement.value = key;
             optionElement.textContent = key;
@@ -197,10 +210,19 @@ function eliminarElemento() {
     }
 }
 
+//Revisa si todos los elementos que hay en LocalStorage empiezan por _ym
+function elementosImportantesLS(){
+    let cont = 0;
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('_ym')) cont++
+    }
+    return cont != localStorage.length 
+}
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    if (localStorage.length == 0 && cargaLS && eliminaLS ){
+    if (!elementosImportantesLS() && cargaLS && eliminaLS ){
         cargaLS.disabled = true
         eliminaLS.disabled = true
     }
@@ -209,8 +231,14 @@ document.addEventListener("DOMContentLoaded", function () {
     mesas.forEach((mesa) => {
         mesa.addEventListener("click", () => abrirModal(mesa));
       }); 
-    document.getElementById("guardarBoton").addEventListener("click", function(){
+    document.getElementById("guardarHtml").addEventListener("click", function(){
         guardaHTML();
+    });
+    document.getElementById("eliminaLocalStorage").addEventListener("click", function(){
+        eliminarElemento(document.getElementById("elementosLocalStorage").value);
+    });
+    document.getElementById("guardarALS").addEventListener("click", function(){
+        guardaEnLocalStorage();
     });
     if(document.getElementById("cargaLocalStorage")){
         document.getElementById("cargaLocalStorage").addEventListener("click", function(){
