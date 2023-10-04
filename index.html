@@ -17,7 +17,7 @@
     </div>
     
 
-    <div id ="creaMesas" class="container py-3" style="background-color: rgb(250, 250, 250); border-radius: 10px;">
+    <div id ="containerCreaMesas" class="container py-3" style="background-color: rgb(250, 250, 250); border-radius: 10px;">
       <h3 class="text-start">Crear nueva disposición</h3>
       <hr>
         <form >
@@ -42,8 +42,9 @@
             
           </form>
     </div>
+
     <br>
-    <div id ="creaLocalStorage" class="container py-3" style="background-color: rgb(250, 250, 250); border-radius: 10px;">
+    <div id ="containerCreaLS" class="container py-3" style="background-color: rgb(250, 250, 250); border-radius: 10px;">
       <h3 class="text-start">Carga desde localStorage</h3>
       <hr>
         <div class="container row">
@@ -60,6 +61,25 @@
           </div>
         </div>
     </div>
+
+    <div id ="containerFichero" class="container py-3" style="background-color: rgb(250, 250, 250); border-radius: 10px;">
+      <h3 class="text-start">Carga desde localStorage</h3>
+      <hr>
+        <div class="container row">
+          <div class="form-group col-md-8">
+            <select id="elementosLocalStorage" class="form-select col-md-6" aria-label="Default select example">
+              <option value="" disabled selected>No hay datos guardados</option>
+            </select>
+          </div>
+          <div class="d-grid col-2 mx-auto">
+            <button class="btn btn-success" id="cargaLocalStorage"> Carga </button>
+          </div>
+          <div class="d-grid col-2 mx-auto">
+            <button class="btn btn-danger" id="eliminaLocalStorage"> Elimina </button>
+          </div>
+        </div>
+    </div>
+
 
     
     

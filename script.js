@@ -8,8 +8,8 @@ function actualizaContenido(nombreAula){
     const guardarFichero = document.getElementById("guardarFichero");
     const guardarALS = document.getElementById("guardarALS");
     const guardarAFichero = document.getElementById("guardarAFichero");
-    const creaMesas = document.getElementById("creaMesas");
-    const creaLS = document.getElementById("creaLocalStorage");
+    const containerCreaMesas = document.getElementById("containerCreaMesas");
+    const creaLS = document.getElementById("containerCreaLS");
     const titulo = document.getElementById("titulo");
     const volver = document.getElementById("volver");
 
@@ -20,7 +20,7 @@ function actualizaContenido(nombreAula){
     guardarAFichero.classList.remove("invisible");
     volver.classList.remove("invisible");
     mesasContainer.innerHTML = "";
-    creaMesas.remove();
+    containerCreaMesas.remove();
     creaLS.remove();
 }
 
