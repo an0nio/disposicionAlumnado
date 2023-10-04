@@ -5,17 +5,20 @@ const eliminaLS = document.getElementById('eliminaLocalStorage');
 
 //borra todos los elementos que no sean mesas y muestra botones para guardar mesas
 function actualizaContenido(nombreAula){
-    const guardarHtml = document.getElementById("guardarHtml");
+    const guardarFichero = document.getElementById("guardarFichero");
     const guardarALS = document.getElementById("guardarALS");
     const guardarAFichero = document.getElementById("guardarAFichero");
     const creaMesas = document.getElementById("creaMesas");
     const creaLS = document.getElementById("creaLocalStorage");
     const titulo = document.getElementById("titulo");
+    const volver = document.getElementById("volver");
+
 
     titulo.textContent = nombreAula 
-    guardarHtml.classList.remove("invisible");
+    guardarFichero.classList.remove("invisible");
     guardarALS.classList.remove("invisible");
     guardarAFichero.classList.remove("invisible");
+    volver.classList.remove("invisible");
     mesasContainer.innerHTML = "";
     creaMesas.remove();
     creaLS.remove();
@@ -25,10 +28,13 @@ function actualizaContenido(nombreAula){
 function crearMesas() {
     const numFilas = parseInt(document.getElementById("numFilas").value);
     const numColumnas = parseInt(document.getElementById("numColumnas").value);
-
+    const nombreAula = document.getElementById("nombreAula").value;
     if((numColumnas<1 || numColumnas >10) || (numFilas<1 || numFilas>10) || nombreAula=="") return;
-
-    actualizaContenido(document.getElementById("nombreAula").value);
+    if(localStorage.getItem(nombreAula)){
+        alert("Ya existe un aula con ese nombre");
+        return;
+    }
+    actualizaContenido(nombreAula);
 
     // Crear mesas vacías organizadas en filas y columnas
     for (let i = 1; i <= numFilas; i++) {
@@ -37,7 +43,7 @@ function crearMesas() {
         for (let j = 1; j <= numColumnas; j++) {
             const mesa = document.createElement("div");
             mesa.className = "mesa";
-            mesa.addEventListener("click", () => abrirModal(mesa));
+            mesa.addEventListener("click", () => abrirModalMesa(mesa));
             fila.appendChild(mesa);
         }
         mesasContainer.appendChild(fila);
@@ -101,21 +107,20 @@ function guardarArchivoJson(nombre) {
 //convierte un json a contenido html
 function mesasAHTML(mesas){
     jsonObj = JSON.parse(mesas)
-    console.log(mesas)
     const mesasContainer = document.getElementById("mesas-container");
     mesasContainer.innerHTML = "";
     jsonObj.forEach(function(filaDeMesas) {
-    var filaDiv = document.createElement("div");
+    let filaDiv = document.createElement("div");
     filaDiv.classList.add("fila");
 
     filaDeMesas.forEach(function(mesa) {
         const mesaDiv = document.createElement("div");
         mesaDiv.classList.add("mesa");
-        var nombreMesaDiv = document.createElement("div");
+        let nombreMesaDiv = document.createElement("div");
         nombreMesaDiv.classList.add("nombre-mesa");
         nombreMesaDiv.textContent = mesa.nombre;
 
-        var descripcionMesaDiv = document.createElement("div");
+        let descripcionMesaDiv = document.createElement("div");
         descripcionMesaDiv.classList.add("descripcion-mesa");
         descripcionMesaDiv.textContent = mesa.descripcion;
 
@@ -123,19 +128,17 @@ function mesasAHTML(mesas){
         mesaDiv.appendChild(descripcionMesaDiv);
 
         filaDiv.appendChild(mesaDiv);
-        mesaDiv.addEventListener("click", () => abrirModal(mesaDiv));
+        mesaDiv.addEventListener("click", () => abrirModalMesa(mesaDiv));
 
     });
 
     mesasContainer.appendChild(filaDiv);
-    console.log(mesasContainer)
     });
 }
 
-
-function abrirModal(mesa) {
+//Abre el modal tras darle click a una de las mesas
+function abrirModalMesa(mesa) {
     mesaSeleccionada = mesa;
-    console.log(mesa)
     const modal = document.getElementById("modal");
     modal.style.display = "block";
     document.getElementById("nombreMesa").value = ""
@@ -148,8 +151,13 @@ function abrirModal(mesa) {
     }
 }
 
-function cerrarModal() {
-    const modal = document.getElementById("modal");
+function abrirModal(nombreM) {
+    const modal = document.getElementById(nombreM);
+    modal.style.display = "block";
+}
+
+function cerrarModal(nombreM) {
+    const modal = document.getElementById(nombreM);
     modal.style.display = "none";
 }
 
@@ -162,15 +170,15 @@ function guardarCambios() {
             <div class="nombre-mesa">${nombreMesa}</div>
             <div class="descripcion-mesa">${descripcionMesa}</div>
         `;
-        cerrarModal();
+        cerrarModal("modal");
     }
 }
 
-// Guarda el contenido de la página HTML entero
+// Guarda el contenido de la página HTML entero. No se ha puesto en esta versión
 function guardaHTML(){
-  var contenidoHTML = document.documentElement.outerHTML;
-  var blob = new Blob([contenidoHTML], { type: "text/html" });
-  var a = document.createElement("a");
+  let contenidoHTML = document.documentElement.outerHTML;
+  let blob = new Blob([contenidoHTML], { type: "text/html" });
+  let a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "alumnadoClase.html"; 
   a.click();
@@ -219,6 +227,57 @@ function elementosImportantesLS(){
     }
     return cont != localStorage.length 
 }
+ // Función para cargar las llaves del localStorage en el modal
+ function cargarLlavesLocalStorage() {
+    let llaves = Object.keys(localStorage);
+    let formularioLlaves = document.getElementById("formularioLlaves");
+    formularioLlaves.innerHTML="";
+
+    llaves.forEach(function(llave) {
+    let checkbox = document.createElement("input");
+    checkbox.className="form-check-input";
+    checkbox.type = "checkbox";
+    checkbox.name = llave;
+    checkbox.value = llave;
+    checkbox.setAttribute("id", llave);
+
+    let div = document.createElement("div");
+    div.className = "form-check";
+    div.style ="text-align : left;"
+    div.appendChild(checkbox);
+//   div.appendChild(document.createTextNode(llave));
+    let label = document.createElement("label");
+    label.className = "form-check-label";
+    label.setAttribute("for", llave);
+    label.textContent = llave;
+    div.appendChild(label);
+
+      formularioLlaves.appendChild(div);
+    });
+  }
+
+  // Función para guardar la selección en un fichero
+  function guardarSeleccionEnFichero() {
+    let formularioLlaves = document.getElementById("formularioLlaves");
+    let formData = new FormData(formularioLlaves);
+    let contenido = {};
+
+    formData.forEach(function(valor, llave) {
+        contenido[llave]=localStorage.getItem(llave);
+    });
+
+
+    // Crear un Blob con el contenido y descargarlo como un archivo
+    let blob = new Blob([JSON.stringify(contenido)], { type: "application/plain" });
+    let url = window.URL.createObjectURL(blob);
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = "seleccion_localstorage.json";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -229,17 +288,19 @@ document.addEventListener("DOMContentLoaded", function () {
     cargarElementosLocalStorage();
     const mesas = document.querySelectorAll(".mesa");
     mesas.forEach((mesa) => {
-        mesa.addEventListener("click", () => abrirModal(mesa));
+        mesa.addEventListener("click", () => abrirModalMesa(mesa));
       }); 
-    document.getElementById("guardarHtml").addEventListener("click", function(){
-        guardaHTML();
+    document.getElementById("guardarFichero").addEventListener("click", function(){
+        abrirModal("modalFichero");
     });
     document.getElementById("eliminaLocalStorage").addEventListener("click", function(){
         eliminarElemento(document.getElementById("elementosLocalStorage").value);
     });
     document.getElementById("guardarALS").addEventListener("click", function(){
         guardaEnLocalStorage();
+        alert("guardado con éxito");
     });
+    document.getElementById("volver").addEventListener("click",function(){location.reload();});
     if(document.getElementById("cargaLocalStorage")){
         document.getElementById("cargaLocalStorage").addEventListener("click", function(){
             let valorSeleccion = document.getElementById("elementosLocalStorage").value;
@@ -247,5 +308,14 @@ document.addEventListener("DOMContentLoaded", function () {
             mesasAHTML(localStorage.getItem(valorSeleccion));
         });
     }
+    // Evento al hacer clic en el botón "Guardar en Fichero"
+    document.getElementById("guardarFichero").addEventListener("click", function() {
+        cargarLlavesLocalStorage();
+      });
+  
+      // Evento al hacer clic en el botón "Guardar Selección"
+      document.getElementById("guardarSeleccion").addEventListener("click", function() {
+        guardarSeleccionEnFichero();
+      });
     
   });

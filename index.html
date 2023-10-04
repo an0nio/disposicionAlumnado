@@ -70,7 +70,7 @@
     <div id="modal" tabindex="-1" class="modal" role="dialog">
       <div class="modal-dialog" role="document">
           <div class="modal-content">
-              <span class="close" onclick="cerrarModal()">&times;</span>
+              <span class="close" onclick="cerrarModal('modal')">&times;</span>
               <div class="modal-header">
                   <h4 class="modal-tittle">Editar Mesa</h4>
               </div>
@@ -82,15 +82,40 @@
               </div>
               <div class="modal-footer">
                   <button class="btn btn-primary" onclick="guardarCambios()">Guardar</button>
-                  <button class="btn btn-secondary" onclick="cerrarModal()">Cerrar</span>
+                  <button class="btn btn-secondary" onclick="cerrarModal('modal')">Cerrar</span>
               </div>
           </div>
       </div>
   </div>
+
+    <!-- Modal -->
+    <div class="modal" role="dialog" id="modalFichero">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Contenido del modal -->
+          <div class="modal-header">
+            <h4 class="modal-title">Seleccionar llaves de localStorage</h4>
+            <span class="close" onclick="cerrarModal('modalFichero')">&times;</span>
+          </div>
+          <div class="modal-body ">
+              <form id="formularioLlaves" class="container">
+                <!-- Aquí se agregarán las checkboxes de las llaves del localStorage -->
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="guardarSeleccion">Guardar Selección</button>
+            <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalFichero')">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <div class="py-5 row">
-        <button class="btn btn-secondary invisible col-3 mx-auto" id="guardarHtml">Guardar HTML</button>
-        <button class="btn btn-success invisible col-3 mx-auto" id="guardarALS">Guardar en ls</button>
-        <button class="btn btn-primary invisible col-3 mx-auto" id="guardarAFichero">Guardar en fichero</button>
+        <button class="btn btn-dark invisible col-2 mx-auto" id="volver">Volver</button>
+        <button class="btn btn-secondary invisible col-2 mx-auto" data-toggle="modal" data-target="#myModal" id="guardarFichero">Guardar en fichero</button>
+        <button class="btn btn-success invisible col-2 mx-auto" id="guardarALS">Guardar en local</button>
+        <button class="btn btn-primary invisible col-2 mx-auto" id="guardarAFichero">Guardar en fichero</button>
     </div>
 
     
