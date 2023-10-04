@@ -7,9 +7,10 @@ const eliminaLS = document.getElementById('eliminaLocalStorage');
 function actualizaContenido(nombreAula){
     const guardarFichero = document.getElementById("guardarFichero");
     const guardarALS = document.getElementById("guardarALS");
+    const containerFichero = document.getElementById("containerFichero");
     const guardarAFichero = document.getElementById("guardarAFichero");
     const containerCreaMesas = document.getElementById("containerCreaMesas");
-    const creaLS = document.getElementById("containerCreaLS");
+    const containerCreaLS = document.getElementById("containerCreaLS");
     const titulo = document.getElementById("titulo");
     const volver = document.getElementById("volver");
 
@@ -21,7 +22,8 @@ function actualizaContenido(nombreAula){
     volver.classList.remove("invisible");
     mesasContainer.innerHTML = "";
     containerCreaMesas.remove();
-    creaLS.remove();
+    containerCreaLS.remove();
+    containerFichero.remove();
 }
 
 // Crea las mesas con número de filas y columnas selecionadas
