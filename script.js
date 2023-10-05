@@ -290,8 +290,12 @@ function procesarTextoAJson() {
     objeto = JSON.parse(jsonTexto);
     try{
         for (let clave in objeto){
-            console.log(objeto[clave])
-            localStorage.setItem(clave,objeto[clave]);
+            console.log(objeto[clave]);
+            if(localStorage.getItem(clave)){
+                alert('Ya existe una disposición de mesas con el nombre ' + clave)
+            }else{
+                localStorage.setItem(clave,objeto[clave]);
+            }
         }
         
     } catch (error) {
@@ -314,7 +318,9 @@ document.addEventListener("DOMContentLoaded", function () {
         abrirModal("modalFichero");
     });
     document.getElementById("eliminaLocalStorage").addEventListener("click", function(){
-        eliminarElemento(document.getElementById("elementosLocalStorage").value);
+        if(confirm("Esta acción eliminará la mesa seleccionada: ")){
+            eliminarElemento(document.getElementById("elementosLocalStorage").value);
+        }
     });
     document.getElementById("guardarALS").addEventListener("click", function(){
         guardaEnLocalStorage();
@@ -328,17 +334,15 @@ document.addEventListener("DOMContentLoaded", function () {
             mesasAHTML(localStorage.getItem(valorSeleccion));
         });
     }
-    // Evento al hacer clic en el botón "Guardar en Fichero"
     document.getElementById("guardarFichero").addEventListener("click", function() {
         cargarLlavesLocalStorage();
       });
   
-      // Evento al hacer clic en el botón "Guardar Selección"
-      document.getElementById("procesarTextoJson").addEventListener("click", function() {
-        procesarTextoAJson();
-      });
-      document.getElementById("guardarSeleccion").addEventListener("click", function() {
-        guardarSeleccionEnFichero();
-      });
+    document.getElementById("procesarTextoJson").addEventListener("click", function() {
+    procesarTextoAJson();
+    });
+    document.getElementById("guardarSeleccion").addEventListener("click", function() {
+    guardarSeleccionEnFichero();
+    });
     
-  });
+});
