@@ -271,6 +271,9 @@ function elementosImportantesLS(){
 
     // Crear un Blob con el contenido y descargarlo como un archivo
     let blob = new Blob([JSON.stringify(contenido)], { type: "application/plain" });
+    console.log(JSON.stringify(contenido));
+    console.log(JSON.parse(JSON.stringify(contenido)));
+
     let url = window.URL.createObjectURL(blob);
     let a = document.createElement("a");
     a.href = url;
@@ -281,6 +284,21 @@ function elementosImportantesLS(){
   }
 
 
+//Convierte el texto del textarea a unas mesas
+function procesarTextoAJson() {
+    const jsonTexto = document.getElementById('textoJson').value;
+    objeto = JSON.parse(jsonTexto);
+    try{
+        for (let clave in objeto){
+            console.log(objeto[clave])
+            localStorage.setItem(clave,objeto[clave]);
+        }
+        
+    } catch (error) {
+        console.log(jsonTexto)
+        alert('No se ha podido procesar el texto');
+    }
+  }
 
 document.addEventListener("DOMContentLoaded", function () {
     if (!elementosImportantesLS() && cargaLS && eliminaLS ){
@@ -316,6 +334,9 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   
       // Evento al hacer clic en el botón "Guardar Selección"
+      document.getElementById("procesarTextoJson").addEventListener("click", function() {
+        procesarTextoAJson();
+      });
       document.getElementById("guardarSeleccion").addEventListener("click", function() {
         guardarSeleccionEnFichero();
       });

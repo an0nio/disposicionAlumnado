@@ -64,18 +64,18 @@
 
 
     <div id ="containerFichero" class="container py-3" style="background-color: rgb(250, 250, 250); border-radius: 10px;">
-      <h3 class="text-start">Carga desde fichero</h3>
+      <h3 class="text-start">Carga desde texto</h3>
       <hr>
-        <div class="container row">
-          <div class="form-group col-md-8">
-            <select id="elementosLocalStorage" class="form-select col-md-6" aria-label="Default select example">
-              <option value="" disabled selected>No hay datos guardados</option>
-            </select>
+        <form class="row">
+          <div class="col-10 text-start">
+            <label for="textoJson">Introduce el texto generado por el archivo .json</label>
+            <textarea  rows="4" class="form-control" name="textoJson" id="textoJson" ></textarea>
           </div>
-          <div class="d-grid col-2 mx-auto">
-            <button class="btn btn-success" id="cargaDesdeFichero"> Carga </button>
+          <div class="d-grid col-2 mx-auto my-auto">
+            <button class="btn btn-success" id="procesarTextoJson"> Carga </button>
           </div>
-        </div>
+        </form>
+
     </div>
 
 
